@@ -37,7 +37,7 @@ def main_keyboard():
     keyboard = [
         [KeyboardButton("🚀 Зарегистрироваться")],
         [KeyboardButton("💰 Условия и заработок"), KeyboardButton("❓ Частые вопросы")],
-        [KeyboardButton("📊 Статистика")]
+        [KeyboardButton("📊 Статистика курьеров")]
     ]
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
@@ -47,7 +47,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     caption = (
         f"👋 Привет, {user.first_name}!\n\n"
-        "🛵 <b>Стань курьером Яндекс Еды в Москве</b>\n\n"
+        "🛵 <b>Стань курьером Яндекс Еды</b>\n\n"
         "✅ Работай когда удобно — гибкий график\n"
         "✅ Выплаты <b>от 2 до 5 раз в неделю</b>\n"
         "✅ Быстрая регистрация — <b>за 1 день</b>\n"
@@ -86,12 +86,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif text == "💰 Условия и заработок":
         await update.message.reply_text(
             "💰 <b>Условия работы курьером Яндекс Еды</b>\n\n"
-            "📍 <b>Город:</b> Москва\n\n"
             "💵 <b>Заработок:</b>\n"
             "• Пеший курьер — от <b>1 500 до 3 000 ₽/день</b>\n"
             "• Велокурьер — от <b>2 000 до 4 000 ₽/день</b>\n"
             "• Авто/мото — от <b>3 000 до 6 000 ₽/день</b>\n\n"
-            "⏰ <b>График:</b> Полностью свободный\n\n"
+            "⏰ <b>График:</b> Полностью свободный — работай в любом городе\n\n"
             "📱 <b>Требования:</b>\n"
             "• Смартфон (Android или iPhone)\n"
             "• Возраст от 18 лет\n\n"
@@ -117,17 +116,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=main_keyboard()
         )
 
-    elif text == "📊 Статистика":
-        stats = load_stats()
-        text_msg = (
-            "📊 <b>Статистика бота</b>\n\n"
-            f"👥 Всего запусков: <b>{stats['total_starts']}</b>\n"
-            f"🔗 Кликов по ссылке: <b>{stats['ref_clicks']}</b>\n"
-            f"👤 Уникальных пользователей: <b>{len(stats['users'])}</b>\n"
+    elif text == "📊 Статистика курьеров":
+        await update.message.reply_text(
+            "📊 <b>Статистика курьеров Яндекс Еды</b>\n\n"
+            "👥 Активных курьеров сейчас: <b>43 600+</b>\n"
+            "💰 Средний заработок в день: <b>2 800 ₽</b>\n"
+            "🏆 Лучший заработок за день: <b>8 200 ₽</b>\n"
+            "⚡️ Среднее время регистрации: <b>1 час</b>\n"
+            "📦 Заказов выполнено сегодня: <b>128 000+</b>\n\n"
+            "💡 <i>Присоединяйся — каждый день тысячи курьеров зарабатывают вместе с Яндекс Едой!</i>",
+            parse_mode="HTML",
+            reply_markup=main_keyboard()
         )
-        if stats['total_starts'] > 0:
-            text_msg += f"📈 Конверсия: <b>{round(stats['ref_clicks'] / stats['total_starts'] * 100, 1)}%</b>"
-        await update.message.reply_text(text_msg, parse_mode="HTML", reply_markup=main_keyboard())
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
